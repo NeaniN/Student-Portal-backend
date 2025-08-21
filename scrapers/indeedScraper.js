@@ -7,7 +7,8 @@ const scrapeIndeed = async () => {
     try {
         browser = await puppeteer.launch({
             headless: true,
-            executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', // change if your Chrome is elsewhere
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
         });
 
         const page = await browser.newPage();
@@ -26,7 +27,7 @@ const scrapeIndeed = async () => {
                 const companyEl = el.querySelector('.companyName');
                 const locationEl = el.querySelector('.companyLocation');
                 if (!titleEl || !linkEl) return null;
-                const link = linkEl.href.startsWith('http') ? linkEl.href : `https://za.indeed.com${linkEl.href}`;
+                const link = linkEl.href.startsWith('http') ? linkEl.href : `https://za.indeed.com${linkEl.getAttribute('href')}`;
                 return {
                     title: titleEl.innerText.trim(),
                     link,
@@ -52,4 +53,3 @@ const scrapeIndeed = async () => {
 };
 
 module.exports = scrapeIndeed;
-

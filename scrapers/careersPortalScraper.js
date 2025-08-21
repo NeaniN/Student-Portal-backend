@@ -1,13 +1,16 @@
 // scrapers/careersPortalScraper.js
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 const Listing = require('../models/Listing');
 
 const scrapeCareersPortal = async () => {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: true,
-            executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', // change if your Chrome is elsewhere
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(), // ✅ Works on Render
+            headless: chromium.headless,
         });
 
         const page = await browser.newPage();
@@ -27,7 +30,7 @@ const scrapeCareersPortal = async () => {
                 if (!titleEl) return null;
                 return {
                     title: titleEl.innerText.trim(),
-                    link: titleEl.href.startsWith('http') ? titleEl.href : `https://www.careersportal.co.za${titleEl.href}`,
+                    link: titleEl.href.startsWith('http') ? titleEl.href : `https://www.careersportal.co.za${titleEl.getAttribute('href')}`,
                     company: companyEl ? companyEl.innerText.trim() : 'N/A',
                     location: locationEl ? locationEl.innerText.trim() : 'N/A',
                     type: 'learnership',
