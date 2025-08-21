@@ -1,14 +1,14 @@
 // scrapers/sayouthScraper.js
-const Listing = require('../models/Listing');
+const Listing = require("../models/Listing");
 
 const scrapeSAYouth = async () => {
-    try {
-        console.log('🔹 SAYouth scraper placeholder running...');
-        // Placeholder: no real scraping yet
-        console.log('🔹 SAYouth scraper placeholder finished.');
-    } catch (err) {
-        console.error('❌ SAYouth scraper error:', err);
-    }
+  try {
+    console.log("SAYouth requires login/captcha. Skipping scrape gracefully.");
+    // If you get a public feed later, transform & save like:
+    // await Listing.create({ title, link, company, location, type: 'opportunity', source: 'SAYouth' });
+  } catch (err) {
+    console.error("❌ SAYouth scraper error:", err.message);
+  }
 };
 
 module.exports = scrapeSAYouth;
